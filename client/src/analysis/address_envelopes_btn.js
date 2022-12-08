@@ -1,4 +1,4 @@
-import { Button, Modal, useTheme, Box, Dialog, MenuItem, Select } from '@mui/material'
+import { Button, Modal, useTheme, Box, Dialog, MenuItem, Select, useMediaQuery } from '@mui/material'
 import axios from 'axios'
 import { useEffect, useReducer, useState } from 'react'
 
@@ -97,11 +97,13 @@ export default function AddressEnvelopesButton(props){
     let zipCodes = []
     data = data.filter(item => !item.mailing_details.addressed_envelope)
     for(const zip of zipPriority) {
-      zipCodes.push({
+      let obj = {
         zip,
         properties: data.filter(item => Number(item.targetZip) === zip)
-      })
+      }
+      if(obj.properties.length) zipCodes.push(obj)
       data = data.filter(item => Number(item.targetZip) !== zip)
+
     }
     if(data.length) zipCodes = { zip: 'Other', properties: data}
     dispatch({ zipCodes, open: false })
@@ -138,6 +140,7 @@ const CustomDialog = ({ open, onClose, zipCodes, updateZipCodes }) => {
   const [ zipCode, setZipCode ] = useState({zip: 'None', properties: [] })
   const [ property, setProperty ] = useState({})
   const theme = useTheme()
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
 
   const handleZipSelect = (e) => {
     for(const zip of zipCodes) {
@@ -194,13 +197,16 @@ const CustomDialog = ({ open, onClose, zipCodes, updateZipCodes }) => {
   }
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog
+      open={open} 
+      onClose={onClose} 
+      fullScreen={fullScreen}
+    >
       <Box sx={{
         display: 'flex',
         flexDirection: 'column',
         padding: theme.spacing(2)
       }}>
-        Thing
         <Select
           label='Zip Code'
           value={zipCode.zip}
@@ -222,7 +228,7 @@ const CustomDialog = ({ open, onClose, zipCodes, updateZipCodes }) => {
             <Box sx={styles.col1}>First Names:</Box>
             <Box sx={styles.col2}>{property.mailing_details.first_names}</Box>
           </Box>
-          <Box sx={{...styles.row, marginBottom: theme.spacing(4)}}>
+          <Box sx={{...styles.row, marginBottom: theme.spacing(2)}}>
             <Box sx={styles.col1}>Full Names:</Box>
             <Box sx={styles.col2}>{property.mailing_details.full_names}</Box>
           </Box>
@@ -242,9 +248,12 @@ const CustomDialog = ({ open, onClose, zipCodes, updateZipCodes }) => {
         )}
         <Box sx={{
           display: 'flex',
-          justifyContent: 'flex-end',
+          justifyContent: 'space-between',
           marginTop: theme.spacing(2)
         }}>
+          <Button onClick={onClose}>
+            Cancel
+          </Button>
           <Button
             variant='contained'
             onClick={markEnvelopeComplete}
