@@ -1,0 +1,31 @@
+{
+  "name": "property_data_aggregator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --ignore client/ --exec babel-node server.js",
+    "render-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.2",
+    "@babel/node": "^7.20.2",
+    "@babel/preset-env": "^7.20.2",
+    "async": "^3.2.4",
+    "axios": "^1.1.3",
+    "body-parser": "^1.20.1",
+    "cheerio": "^1.0.0-rc.12",
+    "cron": "^2.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.2",
+    "nodemon": "^2.0.20",
+    "path": "^0.12.7",
+    "pdfmake": "^0.2.6",
+    "request-promise": "^4.2.6"
+  }
+}
